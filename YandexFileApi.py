@@ -23,7 +23,10 @@ def scan_disk(addr, data):
             print(new_addr)
             print()
             scan_disk(new_addr, data)
-        data.append((new_addr, item['name'], item['created'], item["size"]))
+        if item["size"] == None:
+            data.append((new_addr, item['name'], item['created'], "None"))
+        else:
+            data.append((new_addr, item['name'], item['created'], str(item["size"])+"bytes"))
 
 scan_disk(config.LINK, data)
 
