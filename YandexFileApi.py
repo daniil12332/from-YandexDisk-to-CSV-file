@@ -5,9 +5,11 @@ import config
 
 y = yadisk.YaDisk(token=config.TOKEN)
 
-data = [("Link", "Name", "Created", "Size(KB)")]
+with open(config.FILENAME+".csv", "w", newline="") as file:
+    writer = csv.writer(file)
+    writer.writerows([["Link", "Name", "Created", "Size(KB)"]])
 
-def scan_disk(addr, data):
+def scan_disk(addr):
     for item in y.listdir(addr):
         print(f"Название: {item['name']}")
         print(f'Размер: {item["size"]} байт')
@@ -22,13 +24,14 @@ def scan_disk(addr, data):
                 new_addr = addr+"/"+item['name']
             print(new_addr)
             print()
-            scan_disk(new_addr, data)
+            scan_disk(new_addr)
         if item["size"] == None:
-            data.append((new_addr, item['name'], item['created'], " "))
+            with open(config.FILENAME+".csv", "a", newline="") as file:
+                writer = csv.writer(file)
+                writer.writerows([[new_addr, item['name'], item['created'], " "]])
         else:
-            data.append((new_addr, item['name'], item['created'], int(item["size"])/1000))
+            with open(config.FILENAME+".csv", "a", newline="") as file:
+                writer = csv.writer(file)
+                writer.writerows([[new_addr, item['name'], item['created'], int(item["size"])/1000]])
 
-scan_disk(config.LINK, data)
-
-with open('yadisk.csv', 'w', newline='') as f:
-    csv.writer(f).writerows(data)
+scan_disk(config.LINK)
