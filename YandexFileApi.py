@@ -5,7 +5,7 @@ import config
 
 y = yadisk.YaDisk(token=config.TOKEN)
 
-data = [("Link", "Name", "Created", "Size")]
+data = [("Link", "Name", "Created", "Size(KB)")]
 
 def scan_disk(addr, data):
     for item in y.listdir(addr):
@@ -24,9 +24,9 @@ def scan_disk(addr, data):
             print()
             scan_disk(new_addr, data)
         if item["size"] == None:
-            data.append((new_addr, item['name'], item['created'], "None"))
+            data.append((new_addr, item['name'], item['created'], " "))
         else:
-            data.append((new_addr, item['name'], item['created'], str(item["size"])+"bytes"))
+            data.append((new_addr, item['name'], item['created'], int(item["size"])/1000))
 
 scan_disk(config.LINK, data)
 
